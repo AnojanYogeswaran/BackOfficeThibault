@@ -24,6 +24,16 @@ class InfoProductList(APIView):
         products = InfoProduct.objects.all()
         serializer = InfoProductSerializer(products, many=True)
         return Response(serializer.data)
+    def post(self, request, format=None):
+        serializer = InfoProductSerializer(data=request.data)
+        if serializer.is_valid():
+            # Vérifie si un produit avec le même tig_id existe déjà
+            if InfoProduct.objects.filter(tig_id=request.data['tig_id']).exists():
+                return Response({'error': 'Un produit avec ce tig_id existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    
 class InfoProductDetail(APIView):
 #######################
 #...TME3 JWT starts...#
@@ -41,6 +51,20 @@ class InfoProductDetail(APIView):
         product = self.get_object(tig_id=tig_id)
         serializer = InfoProductSerializer(product)
         return Response(serializer.data)
+    
+    def put(self, request, tig_id, format=None):
+        product = self.get_object(tig_id=tig_id)
+        serializer = InfoProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+    
+    def delete(self, request, tig_id, format=None):
+        product = self.get_object(tig_id=tig_id)
+        product.delete()
+        return Response(200)
+        
+
     
 class PutOnSale(APIView):
    permission_classes = (IsAuthenticated,)
