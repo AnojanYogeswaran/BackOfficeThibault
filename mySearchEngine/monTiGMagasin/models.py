@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 class InfoProduct(models.Model):
+    
     created = models.DateTimeField(auto_now_add=True)
     tig_id = models.IntegerField(default='-1')
     name = models.CharField(max_length=100, blank=True, default='')

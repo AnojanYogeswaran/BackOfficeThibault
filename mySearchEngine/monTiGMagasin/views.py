@@ -35,13 +35,6 @@ class InfoProductList(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-    def delete(self, request, format=None):
-        duplicate_tig_ids = InfoProduct.objects.values('tig_id').annotate(tig_id_count=Count('tig_id')).filter(tig_id_count__gt=1).values_list('tig_id', flat=True)
-        for tig_id in duplicate_tig_ids:
-            products_to_delete = InfoProduct.objects.filter(tig_id=tig_id).order_by('id')[1:]
-            for product in products_to_delete:
-                product.delete()
-        return Response('bien vu')
 
     
 class InfoProductDetail(APIView):
@@ -74,9 +67,7 @@ class InfoProductDetail(APIView):
         product = self.get_object(tig_id=tig_id)
         product.delete()
         return Response(200)
-        
 
-    
 class PutOnSale(APIView):
    permission_classes = (IsAuthenticated,)
    def put(self, request, tig_id, newprice):

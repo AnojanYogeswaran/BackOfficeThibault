@@ -4,7 +4,7 @@ from rest_framework import serializers
 
 
 class InfoProductSerializer(ModelSerializer):
-    tig_id = serializers.IntegerField(required=True)
+    
     name = serializers.CharField(required=True)
     category = serializers.IntegerField(required=True)
     price = serializers.DecimalField(required=True, max_digits=10, decimal_places=2)
@@ -12,9 +12,12 @@ class InfoProductSerializer(ModelSerializer):
     availability = serializers.BooleanField(required=True)
     sale = serializers.BooleanField(required=True)
     discount = serializers.DecimalField(required=True, max_digits=10, decimal_places=2)
-    comments = serializers.CharField(required=False)
+    
     owner = serializers.CharField(required=True)
-    quantityInStock = serializers.IntegerField(required=True)
+    tig_id = serializers.ReadOnlyField()
+    id = serializers.ReadOnlyField()
+    quantityInStock = serializers.ReadOnlyField()
+    
     class Meta:
         model = InfoProduct
         fields = ('id', 'tig_id', 'name', 'category', 'price', 'unit', 'availability', 'sale', 'discount', 'comments', 'owner', 'quantityInStock')

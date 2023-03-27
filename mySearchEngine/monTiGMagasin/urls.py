@@ -13,5 +13,6 @@ urlpatterns = [
     path('putonsale/<int:tig_id>/<int:newprice>/', views.PutOnSale.as_view()),
     path('removesale/<int:tig_id>/',views.RemoveSale.as_view()),
     path('incrementStock/<int:tig_id>/<int:unites>/',views.IncrementStock.as_view()),
-    path('decrementStock/<int:tig_id>/<int:unites>/',views.DecrementStock.as_view())
+    path('decrementStock/<int:tig_id>/<int:unites>/',views.DecrementStock.as_view()),
+    
 ]
