@@ -68,10 +68,12 @@ MIDDLEWARE = [
 ]
 
 #CORS#
-ALLOWED_HOSTS = ['http://127.0.0.1:8080',"http://localhost:8080", "127.0.0.1"]
+ALLOWED_HOSTS = ['http://127.0.0.1:8080',"http://localhost:8080", "127.0.0.1", "http://localhost:8081",'http://127.0.0.1:8081']
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:8080",
+    'http://127.0.0.1:8081',
+    "http://localhost:8081"
 ]
 
 CORS_ALLOW_METHODS = [
@@ -178,7 +180,7 @@ REST_FRAMEWORK = {
 from datetime import timedelta
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(minutes=10),
 }
 #...end of TME3 JWT...#
