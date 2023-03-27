@@ -35,7 +35,12 @@ class InfoProductList(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
-
+    def put(self, request, format=None):
+        products = InfoProduct.objects.all()
+        for product in products:
+            product.tig_id = product.id
+            product.save()
+        return Response({'success': 'Les tig_id ont été mis à jour avec succès.'})
     
 class InfoProductDetail(APIView):
 #######################
@@ -45,13 +50,13 @@ class InfoProductDetail(APIView):
 #######################
     
        
-    def get_object(self, tig_id):
+    def get_object(self, id):
         try:
-            return InfoProduct.objects.get(tig_id=tig_id)
+            return InfoProduct.objects.get(id=id)
         except InfoProduct.DoesNotExist:
             raise Http404
-    def get(self, request, tig_id, format=None):
-        product = self.get_object(tig_id=tig_id)
+    def get(self, request, id, format=None):
+        product = self.get_object(id=id)
         serializer = InfoProductSerializer(product)
         return Response(serializer.data)
     
