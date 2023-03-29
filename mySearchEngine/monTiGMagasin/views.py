@@ -101,6 +101,8 @@ class IncrementStock(APIView):
     product = InfoProduct.objects.get(id=tig_id)
     serializer = InfoProductSerializer(product)
     product.quantityInStock += unites
+    if product.quantityInStock > 0 and product.availability == False:
+       product.availability = True
     product.save()
     return Response(serializer.data)
    
@@ -109,7 +111,11 @@ class DecrementStock(APIView):
    def put(self, request, unites, tig_id):
     product = InfoProduct.objects.get(id=tig_id)
     serializer = InfoProductSerializer(product)
-    product.quantityInStock -= unites
+    if product.quantityInStock > 0 :
+        product.quantityInStock -= unites
+    if product.quantityInStock == 0 and product.availability == True :
+       product.availability = False
+       print("ff")
     product.save()
     return Response(serializer.data)
    
