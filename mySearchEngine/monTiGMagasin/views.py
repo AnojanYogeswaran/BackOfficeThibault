@@ -78,7 +78,8 @@ class PutOnSale(APIView):
    def put(self, request, tig_id, newprice):
     product = InfoProduct.objects.get(id=tig_id)
     serializer = InfoProductSerializer(product)
-    product.sale = True
+    if product.sale == False :
+        product.sale = True
     product.discount = newprice
     product.save()
     return Response(serializer.data)
@@ -88,7 +89,8 @@ class RemoveSale(APIView):
    def put(self, request, tig_id):
     product = InfoProduct.objects.get(id=tig_id)
     serializer = InfoProductSerializer(product)
-    product.sale = False
+    if product.sale == True :
+        product.sale = False
     product.discount = 0
     product.save()
     return Response(serializer.data)
