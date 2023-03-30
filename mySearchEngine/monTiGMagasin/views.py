@@ -29,12 +29,27 @@ class InfoProductList(APIView):
     def post(self, request, format=None):
         serializer = InfoProductSerializer(data=request.data)
         if serializer.is_valid():
-            # Vérifie si un produit avec le même tig_id existe déjà
-            if InfoProduct.objects.filter(tig_id=request.data['tig_id']).exists():
-                return Response({'error': 'Un produit avec ce tig_id existe déjà.'}, status=status.HTTP_400_BAD_REQUEST)
+            # Incrémente le tig_id pour chaque nouveau produit créé
+            last_tig_id = InfoProduct.objects.order_by('-tig_id').values_list('tig_id', flat=True).first() or 0
+            serializer.validated_data['tig_id'] = last_tig_id + 1
+
+            # Met à jour les champs sale et availability en fonction des champs discount et quantityInStock
+            if serializer.validated_data.get('discount', 0) > 0:
+                serializer.validated_data['sale'] = True
+            else:
+                serializer.validated_data['sale'] = False
+            
+            if serializer.validated_data.get('quantityInStock', 0) > 0:
+                serializer.validated_data['availability'] = True
+            else:
+                serializer.validated_data['availability'] = False
+            
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors)
+        else:
+            return Response(serializer.errors)
+
+
     def put(self, request, format=None):
         products = InfoProduct.objects.all()
         for product in products:
