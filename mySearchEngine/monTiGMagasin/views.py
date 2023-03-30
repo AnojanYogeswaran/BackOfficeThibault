@@ -62,7 +62,7 @@ class InfoProductDetail(APIView):
 #...TME3 JWT starts...#
     permission_classes = (IsAuthenticated,)
 #...end of TME3 JWT...#
-#######################
+######################
     
        
     def get_object(self, tig_id):
