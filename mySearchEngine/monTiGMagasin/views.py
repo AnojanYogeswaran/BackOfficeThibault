@@ -78,8 +78,18 @@ class InfoProductDetail(APIView):
     def put(self, request, tig_id, format=None):
         product = self.get_object(tig_id=tig_id)
         serializer = InfoProductSerializer(product, data=request.data)
+        
         if serializer.is_valid():
-            serializer.save()
+            if serializer.validated_data.get('discount', 0) > 0:
+                serializer.validated_data['sale'] = True
+            else:
+                serializer.validated_data['sale'] = False
+                
+            if serializer.validated_data.get('quantityInStock', 0) > 0:
+                serializer.validated_data['availability'] = True
+            else:
+                serializer.validated_data['availability'] = False
+                serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
     
