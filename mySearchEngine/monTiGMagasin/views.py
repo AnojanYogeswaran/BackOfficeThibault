@@ -80,7 +80,9 @@ class PutOnSale(APIView):
     serializer = InfoProductSerializer(product)
     if product.sale == False :
         product.sale = True
-    product.discount = newprice
+    percent = float(newprice)
+    reduction = (percent / 100) * product.price
+    product.discount = product.price - reduction
     product.save()
     return Response(serializer.data)
    
@@ -118,7 +120,20 @@ class DecrementStock(APIView):
        print("ff")
     product.save()
     return Response(serializer.data)
-   
+
+class updateStock(APIView):
+   permission_classes = (IsAuthenticated,)
+   def put(self, request, quantity, tig_id):
+    product = InfoProduct.objects.get(id=tig_id)
+    serializer = InfoProductSerializer(product)
+    product.quantityInStock = quantity
+    if product.quantityInStock > 0 and product.availability == False:
+       product.availability = True
+    if quantity == 0 and product.availability == True:
+       product.availability = False
+    product.save()
+    return Response(serializer.data)
+
 class update_product_sale(APIView):
    permission_classes = (IsAuthenticated,)
    products = InfoProduct.objects.all()
